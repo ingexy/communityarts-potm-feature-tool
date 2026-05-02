@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMMUNITYARTS POTM Feature Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #e8c97a;
+            --dark: #0f0e0c;
+            --dark-2: #1a1915;
+            --dark-3: #252420;
+            --cream: #f5f0e8;
+            --cream-dim: #d4cdbf;
+            --accent: #e05c2a;
+            --green: #4a7c59;
+            --card-bg: #1e1c18;
+            --border: rgba(201, 168, 76, 0.25);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--dark);
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 90%, rgba(224,92,42,0.05) 0%, transparent 50%);
+            min-height: 100vh;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--cream);
+            padding: 40px 20px 60px;
+        }
+
+        /* ─── HEADER ─── */
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            border: 1px solid var(--border);
+            padding: 5px 18px;
+            border-radius: 2px;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            color: var(--cream);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+        }
+
+        h1 span {
+            color: var(--gold);
+        }
+
+        .subtitle {
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--cream-dim);
+            letter-spacing: 0.05em;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 20px auto 0;
+        }
+
+        /* ─── CONTROLS ─── */
+        .controls {
+            display: flex;
+            gap: 20px;
+            max-width: 860px;
+            margin: 0 auto 40px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        label {
+            display: block;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px 16px;
+            background: var(--dark-3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--cream);
+            font-size: 15px;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        input::placeholder { color: rgba(212,205,191,0.35); }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+        }
+
+        .select-wrap {
+            position: relative;
+        }
+
+        .select-wrap::after {
+            content: '▾';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold);
+            pointer-events: none;
+            font-size: 14px;
+        }
+
+        /* ─── SCRIPTS GRID ─── */
+        .scripts-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .script-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .script-card:hover {
+            border-color: rgba(201,168,76,0.5);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(201,168,76,0.04);
+        }
+
+        .card-title {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--gold-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        .copy-btn {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 7px 16px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .copy-btn.copied {
+            background: var(--green);
+            border-color: var(--green);
+            color: white;
+        }
+
+        .script-body {
+            padding: 20px;
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--cream);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* ─── TOAST ─── */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--green);
+            color: white;
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            padding: 11px 24px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 24px 14px 50px; }
+            .controls { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="eyebrow">Snap Community Arts</div>
+        <h1>COMMUNITYARTS <span>POTM</span><br>Feature Tool</h1>
+        <p class="subtitle">Photo of the Month — Script Generator</p>
+        <div class="divider"></div>
+    </header>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="memberName">Naam</label>
+            <input type="text" id="memberName" placeholder="Voer naam in…">
+        </div>
+        <div class="control-group">
+            <label for="membershipStatus">Membership Status</label>
+            <div class="select-wrap">
+                <select id="membershipStatus">
+                    <option value="Artist">Artist</option>
+                    <option value="Member">Member</option>
+                    <option value="Vip Member">Vip Member</option>
+                    <option value="Vip Gold Member">Vip Gold Member</option>
+                    <option value="Platinum Member">Platinum Member</option>
+                    <option value="Elite Member">Elite Member</option>
+                    <option value="Hall of Fame Member">Hall of Fame Member</option>
+                    <option value="Diamond Member">Diamond Member</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="scripts-grid">
+
+        <div class="script-card">
+            <div class="card-header">
+                <div class="card-title">Community Arts Feature Script</div>
+                <button class="copy-btn" data-target="script-main">Kopieer</button>
+            </div>
+            <div class="script-body" id="script-main"></div>
+        </div>
+
+        <div class="script-card">
+            <div class="card-header">
+                <div class="card-title">Feature Comment</div>
+                <button class="copy-btn" data-target="script-feature">Kopieer</button>
+            </div>
+            <div class="script-body" id="script-feature"></div>
+        </div>
+
+        <div class="script-card">
+            <div class="card-header">
+                <div class="card-title">Original Photo Comment</div>
+                <button class="copy-btn" data-target="script-special">Kopieer</button>
+            </div>
+            <div class="script-body" id="script-special"></div>
+        </div>
+
+        <div class="script-card">
+            <div class="card-header">
+                <div class="card-title">Extra Comment</div>
+                <button class="copy-btn" data-target="script-extra">Kopieer</button>
+            </div>
+            <div class="script-body" id="script-extra"></div>
+        </div>
+
+    </div>
+
+    <div class="toast" id="toast">✓ Gekopieerd naar klembord</div>
+
+    <script>
+        const templates = {
+            'script-main': `#snap_communityarts_specialfeature
+.
+Featured Snap {status}: @{name}
+✨ C O N G R A T U L A T I O N S ✨
+__________________________________
+.
+💫💫   PHOTO OF THE MONTH   💫💫
+.
+Selected by Page Admin :
+Inge : @ingedavid 
+.
+This feature is worth 1 point towards your membership!
+.
+Follow vero.co/snap_kingdom for more pages to tag and follow
+Visit our Website:  www.rawkingdomarts.com
+.
+Contact vero.co/snap_community_member
+For your membership questions and level validations
+.
+#snap_community #snap_communityarts #vero #verofriends #photoofthemonth
+.
+#snap_communityarts_photoofthemonth
+#snap_communityarts_{name}
+#snap_featured_{name}
+.
+.`,
+
+            'script-feature': `@{name} Congratulations! 🎉 Brilliant Work! Your photography has been highlighted as Photo of the Month on Snap Community Arts. Keep tagging your wonderful pictures with #snap_communityarts 💫`,
+
+            'script-special': `@{name} Congratulations! 💫
+Congratulations on your special feature "Photo of the Month"! 🎉
+Brilliant Work!`,
+
+            'script-extra': `@{name} Congratulations! 💫
+This feature is worth 1 point towards your membership!
+Brilliant Work!`
+        };
+
+        function render() {
+            const name = document.getElementById('memberName').value.trim() || 'name';
+            const status = document.getElementById('membershipStatus').value;
+
+            Object.keys(templates).forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.textContent = templates[id]
+                    .replace(/{name}/g, name)
+                    .replace(/{status}/g, status);
+            });
+        }
+
+        document.getElementById('memberName').addEventListener('input', render);
+        document.getElementById('membershipStatus').addEventListener('change', render);
+
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.target;
+                const text = document.getElementById(target).textContent;
+                navigator.clipboard.writeText(text).catch(() => {
+                    const ta = document.createElement('textarea');
+                    ta.value = text; document.body.appendChild(ta);
+                    ta.select(); document.execCommand('copy');
+                    document.body.removeChild(ta);
+                });
+                btn.textContent = '✓ Gekopieerd';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Kopieer';
+                    btn.classList.remove('copied');
+                }, 2000);
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            });
+        });
+
+        render();
+    </script>
+</body>
+</html>
