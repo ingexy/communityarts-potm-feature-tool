@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +33,6 @@
             padding: 40px 20px 60px;
         }
 
-        /* ─── HEADER ─── */
         header {
             text-align: center;
             margin-bottom: 48px;
@@ -61,17 +60,7 @@
             letter-spacing: -0.01em;
         }
 
-        h1 span {
-            color: var(--gold);
-        }
-
-        .subtitle {
-            margin-top: 12px;
-            font-size: 13px;
-            color: var(--cream-dim);
-            letter-spacing: 0.05em;
-            font-family: 'DM Mono', monospace;
-        }
+        h1 span { color: var(--gold); }
 
         .divider {
             width: 80px;
@@ -80,7 +69,7 @@
             margin: 20px auto 0;
         }
 
-        /* ─── CONTROLS ─── */
+        /* Controls */
         .controls {
             display: flex;
             gap: 20px;
@@ -104,7 +93,7 @@
             margin-bottom: 8px;
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 13px 16px;
             background: var(--dark-3);
@@ -118,18 +107,21 @@
             -webkit-appearance: none;
         }
 
-        input::placeholder { color: rgba(212,205,191,0.35); }
+        input::placeholder, textarea::placeholder { color: rgba(212,205,191,0.35); }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--gold);
             box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
         }
 
-        .select-wrap {
-            position: relative;
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+            line-height: 1.6;
         }
 
+        .select-wrap { position: relative; }
         .select-wrap::after {
             content: '▾';
             position: absolute;
@@ -141,7 +133,7 @@
             font-size: 14px;
         }
 
-        /* ─── SCRIPTS GRID ─── */
+        /* Script cards */
         .scripts-grid {
             display: flex;
             flex-direction: column;
@@ -206,16 +198,8 @@
             transition: all 0.2s;
         }
 
-        .copy-btn:hover {
-            background: var(--gold);
-            color: var(--dark);
-        }
-
-        .copy-btn.copied {
-            background: var(--green);
-            border-color: var(--green);
-            color: white;
-        }
+        .copy-btn:hover { background: var(--gold); color: var(--dark); }
+        .copy-btn.copied { background: var(--green); border-color: var(--green); color: white; }
 
         .script-body {
             padding: 20px;
@@ -227,7 +211,16 @@
             word-break: break-word;
         }
 
-        /* ─── TOAST ─── */
+        /* Personal comment field inside card */
+        .personal-comment-wrap {
+            padding: 0 20px 20px;
+        }
+
+        .personal-comment-wrap label {
+            margin-bottom: 8px;
+        }
+
+        /* Toast */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -262,14 +255,13 @@
     <header>
         <div class="eyebrow">Snap Community Arts</div>
         <h1>COMMUNITYARTS <span>POTM</span><br>Feature Tool</h1>
-        <p class="subtitle">Photo of the Month — Script Generator</p>
         <div class="divider"></div>
     </header>
 
     <div class="controls">
         <div class="control-group">
-            <label for="memberName">Naam</label>
-            <input type="text" id="memberName" placeholder="Voer naam in…">
+            <label for="memberName">Name</label>
+            <input type="text" id="memberName" placeholder="Enter name…">
         </div>
         <div class="control-group">
             <label for="membershipStatus">Membership Status</label>
@@ -290,45 +282,43 @@
 
     <div class="scripts-grid">
 
+        <!-- Community Arts Feature Script -->
         <div class="script-card">
             <div class="card-header">
                 <div class="card-title">Community Arts Feature Script</div>
-                <button class="copy-btn" data-target="script-main">Kopieer</button>
+                <button class="copy-btn" data-target="script-main">Copy</button>
             </div>
             <div class="script-body" id="script-main"></div>
         </div>
 
+        <!-- Feature Comment -->
         <div class="script-card">
             <div class="card-header">
                 <div class="card-title">Feature Comment</div>
-                <button class="copy-btn" data-target="script-feature">Kopieer</button>
+                <button class="copy-btn" data-target="script-feature">Copy</button>
             </div>
             <div class="script-body" id="script-feature"></div>
+            <div class="personal-comment-wrap">
+                <label for="personalComment">Personal Comment</label>
+                <textarea id="personalComment" placeholder="Write your personal comment here…"></textarea>
+            </div>
         </div>
 
+        <!-- Original Photo Comment -->
         <div class="script-card">
             <div class="card-header">
                 <div class="card-title">Original Photo Comment</div>
-                <button class="copy-btn" data-target="script-special">Kopieer</button>
+                <button class="copy-btn" data-target="script-original">Copy</button>
             </div>
-            <div class="script-body" id="script-special"></div>
-        </div>
-
-        <div class="script-card">
-            <div class="card-header">
-                <div class="card-title">Extra Comment</div>
-                <button class="copy-btn" data-target="script-extra">Kopieer</button>
-            </div>
-            <div class="script-body" id="script-extra"></div>
+            <div class="script-body" id="script-original"></div>
         </div>
 
     </div>
 
-    <div class="toast" id="toast">✓ Gekopieerd naar klembord</div>
+    <div class="toast" id="toast">✓ Copied to clipboard</div>
 
     <script>
-        const templates = {
-            'script-main': `#snap_communityarts_specialfeature
+        const mainTemplate = `#snap_communityarts_specialfeature
 .
 Featured Snap {status}: @{name}
 ✨ C O N G R A T U L A T I O N S ✨
@@ -353,56 +343,68 @@ For your membership questions and level validations
 #snap_communityarts_{name}
 #snap_featured_{name}
 .
-.`,
+.`;
 
-            'script-feature': `@{name} Congratulations! 🎉 Brilliant Work! Your photography has been highlighted as Photo of the Month on Snap Community Arts. Keep tagging your wonderful pictures with #snap_communityarts 💫`,
+        function buildFeatureComment(name, personalComment) {
+            let text = `✨✨ CONGRATULATIONS @${name} ✨✨\n✨✨    On Being our Photo of the Month Winner.   ✨✨`;
+            if (personalComment.trim()) {
+                text += `\n\n${personalComment.trim()}`;
+            }
+            return text;
+        }
 
-            'script-special': `@{name} Congratulations! 💫
-Congratulations on your special feature "Photo of the Month"! 🎉
-Brilliant Work!`,
-
-            'script-extra': `@{name} Congratulations! 💫
-This feature is worth 1 point towards your membership!
-Brilliant Work!`
-        };
+        function buildOriginalComment(name) {
+            return `✨✨ CONGRATULATIONS @${name} ✨✨\n✨✨    On Being our Photo of the Month Winner`;
+        }
 
         function render() {
             const name = document.getElementById('memberName').value.trim() || 'name';
             const status = document.getElementById('membershipStatus').value;
+            const personalComment = document.getElementById('personalComment').value;
 
-            Object.keys(templates).forEach(id => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                el.textContent = templates[id]
-                    .replace(/{name}/g, name)
-                    .replace(/{status}/g, status);
-            });
+            // Main script
+            document.getElementById('script-main').textContent = mainTemplate
+                .replace(/{name}/g, name)
+                .replace(/{status}/g, status);
+
+            // Feature comment
+            document.getElementById('script-feature').textContent = buildFeatureComment(name, personalComment);
+
+            // Original photo comment
+            document.getElementById('script-original').textContent = buildOriginalComment(name);
         }
 
-        document.getElementById('memberName').addEventListener('input', render);
-        document.getElementById('membershipStatus').addEventListener('change', render);
-
+        // Copy buttons — feature comment copies script + personal comment together
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const target = btn.dataset.target;
                 const text = document.getElementById(target).textContent;
+
                 navigator.clipboard.writeText(text).catch(() => {
                     const ta = document.createElement('textarea');
-                    ta.value = text; document.body.appendChild(ta);
-                    ta.select(); document.execCommand('copy');
+                    ta.value = text;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
                     document.body.removeChild(ta);
                 });
-                btn.textContent = '✓ Gekopieerd';
+
+                btn.textContent = '✓ Copied';
                 btn.classList.add('copied');
                 setTimeout(() => {
-                    btn.textContent = 'Kopieer';
+                    btn.textContent = 'Copy';
                     btn.classList.remove('copied');
                 }, 2000);
+
                 const toast = document.getElementById('toast');
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 2500);
             });
         });
+
+        document.getElementById('memberName').addEventListener('input', render);
+        document.getElementById('membershipStatus').addEventListener('change', render);
+        document.getElementById('personalComment').addEventListener('input', render);
 
         render();
     </script>
